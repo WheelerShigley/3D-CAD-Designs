@@ -1,3 +1,5 @@
+include<paper.scad>;
+
 //Metric-Paper Number
 A = 7;
 //Paper Thickness (mm)
@@ -21,20 +23,6 @@ mH = 3;
 mD = 1;
 
 fn_constant = 4*PI;
-
-function metricPaperShort(a) = 1000*sqrt(
-    (2^-a)/sqrt(2)
-);
-function metricPaperLong(a) = 1000*sqrt(
-    (2^-a)*sqrt(2)
-);
-
-module metricPaper(a, height = 0.5, center = true) {
-    cube(
-        [metricPaperShort(a), metricPaperLong(a), height],
-        center
-    );
-}
 
 module torus(inner_diameter, outer_diameter, center = true) {
     distance = (outer_diameter+inner_diameter)/2;
