@@ -1,10 +1,13 @@
-length = 60;
-width = 95;
-height = 20.25;
+//dimensions, in mm(s)
+dimensions = [
+    60,
+    95,
+    20.25
+];
 //wall thickness (in addition to dimensions)
 thickness = 5;
 
-$fn = 4*3.14*height;
+$fn = 4*3.14*dimensions.z;
 
 module shape(dimensions, capped, center = false) {
     length = dimensions.x;
@@ -38,40 +41,42 @@ module side(dimensions, thickness, center = true) {
     height = dimensions.z;
 
     _radius = height/2;
-    difference() {
-        union() {
-            cube([width,length,thickness], center = center);
-            translate([width/2-thickness,0,thickness*3/2]) {
-                cube([_radius,length,_radius], center = center);
-            }
-        }
-        union() {
-            //(expandable) screw-holes
-            for(side = [-1,1]) {
-                translate([0,side*(width-thickness)/2,0]) {
-                    rotate([90,0,0]) {
-                        shape(
-                            dimensions = [thickness,width/2,thickness],
-                            capped = false,
-                            center = center
-                        );
-                    }
+    translate([0,0, center ? thickness/2 - (thickness + _radius)/2 : thickness/2]) {
+        difference() {
+            union() {
+                cube([width,length,thickness], center = true);
+                translate([width/2-thickness,0,thickness*3/2]) {
+                    cube([_radius,length,_radius], center = true);
                 }
             }
-            //cut into transition "step"
-            translate([width/2-height/2,0, height/2+thickness/2]) {
-                rotate([90,0,0]) {
-                    cylinder(h = length+2*thickness, r = height/2, center= center);
-                }
-            }
-            //cut into side (for transition)
-            translate([-width/2+thickness/2,0,0]) {
-                difference() {
-                    translate([thickness/-4,0,thickness/4]) {
-                        cube([thickness/2, length+2*thickness, thickness/2], center = center);
+            union() {
+                //(expandable) screw-holes
+                for(side = [-1,1]) {
+                    translate([0,side*(width-thickness)/2,0]) {
+                        rotate([90,0,0]) {
+                            shape(
+                                dimensions = [thickness,width/2,thickness],
+                                capped = false,
+                                center = true
+                            );
+                        }
                     }
+                }
+                //cut into transition "step"
+                translate([width/2-height/2,0, height/2+thickness/2]) {
                     rotate([90,0,0]) {
-                        cylinder(h = length+2*thickness, r = thickness/2, center = center);
+                        cylinder(h = length+2*thickness, r = height/2, center = true);
+                    }
+                }
+                //cut into side (for transition)
+                translate([-width/2+thickness/2,0,0]) {
+                    difference() {
+                        translate([thickness/-4,0,thickness/4]) {
+                            cube([thickness/2, length+2*thickness, thickness/2], center = true);
+                        }
+                        rotate([90,0,0]) {
+                            cylinder(h = length+2*thickness, r = thickness/2, center = true);
+                        }
                     }
                 }
             }
@@ -109,18 +114,18 @@ module body(dimensions, thickness, center = true) {
 }
 
 union() {
-    translate([0,0,height/2+thickness]) {
+    translate([0,0,dimensions.z/2+thickness]) {
         body(
-            dimensions = [length, width, height],
+            dimensions = dimensions,
             thickness = thickness,
             center = true
         );
     }
     //sides
     for(side = [1,-1]) {
-        translate([side*(width*3/4+thickness),0,thickness/2]) {
+        translate([side*(dimensions.y*3/4+thickness),0,0]) {
             rotate([0,0,0 < side ? 180 : 0]) {
-                side([length+2*thickness, width/2, height], thickness);
+                side([dimensions.x+2*thickness, dimensions.y/2, dimensions.z], thickness, false);
             }
         }
     }
