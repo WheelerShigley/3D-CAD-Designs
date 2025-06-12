@@ -1,4 +1,5 @@
 include<paper.scadh>;
+include<common.scadh>;
 
 //Metric-Paper Number
 A = 7;
@@ -23,17 +24,6 @@ mH = 3;
 mD = 1;
 
 fn_constant = 4*PI;
-
-module torus(inner_diameter, outer_diameter, center = true) {
-    distance = (outer_diameter+inner_diameter)/2;
-    diameter = (outer_diameter-inner_diameter);
-    $fn = fn_constant*diameter;
-    rotate_extrude() {
-        translate([distance,0,0]) {
-            circle(d = diameter);
-        }
-    }
-}
 
 module innerCylinder(column_radius, height, rounding_radius, center = true) {
     union() {

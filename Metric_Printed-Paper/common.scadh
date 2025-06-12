@@ -1,0 +1,15 @@
+module torus(inner_diameter, outer_diameter, center = true) {
+    distance = (outer_diameter+inner_diameter)/2;
+    diameter = (outer_diameter-inner_diameter);
+    $fn = fn_constant*diameter;
+    rotate_extrude() {
+        translate([distance,0,0]) {
+            circle(d = diameter);
+        }
+    }
+}
+
+module magnet(h = 3, r = 2.5, center = true) {
+    $fn = 4*3.14*r;
+    cylinder(h = h, r = r, center = center);
+}

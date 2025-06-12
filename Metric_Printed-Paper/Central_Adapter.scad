@@ -1,4 +1,5 @@
 include<paper.scadh>;
+include<common.scadh>;
 
 //Paper Standard
 A = 7;
@@ -12,11 +13,6 @@ T = 10;
 
 //Magnet Offset (mm)
 dM = 2;
-
-module magnet(h = 3, r = 2.5, center = true) {
-    $fn = 4*3.14*r;
-    cylinder(h = h, r = r, center = center);
-}
 
 module latticeAlignerCavity(dimensions, magnet_offset, magnet_height, magnet_radius, center) {
     union() {

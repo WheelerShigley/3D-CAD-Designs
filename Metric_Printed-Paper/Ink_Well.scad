@@ -1,4 +1,5 @@
 include<paper.scadh>;
+include<common.scadh>;
 
 //Paper Size (metric)
 A = 7;
@@ -18,15 +19,10 @@ mH = 3;
 //magnet radius (mm)
 mR = 2.5;
 
-module magnet(r = 2.5, h = 3, center = true) {
-    $fn = 4*3.14*r;
-    cylinder(r = r, h = h, center = center);
-}
-
 module guide(sphere_radius, hole_radius, center = true) {
     $fn = 4*3.14*sphere_radius;
     difference() {
-        sphere(r = sphere_radius, center = center);
+        sphere(r = sphere_radius);
         cylinder(h = 2*sphere_radius+0.2, r = hole_radius, center = center);
     }
 }
