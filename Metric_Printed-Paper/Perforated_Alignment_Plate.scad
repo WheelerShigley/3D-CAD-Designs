@@ -21,8 +21,9 @@ mR = 2.5;
 //magnet height
 mH = 3;
 //distance to offset magnets from edges
-mD = 1;
+dM = 5;
 
+//TODO: refactor all functions to use parameters
 fn_constant = 4*PI;
 
 module innerCylinder(column_radius, height, rounding_radius, center = true) {
@@ -125,17 +126,19 @@ module perferations(a, distance, height, radius, rounding_radius, center = true)
 }
 
 module metricPerferatedPlate(a, distance, height, radius, rounding_radius, border, center = true) {
+    _width = metricPaperShort(a)+2*border;
+    _length = metricPaperLong(a)+2*border;
     difference() {
         translate([0,0,height/-2]) {
-            cube([metricPaperShort(a)+border, metricPaperLong(a)+border, height], center = center);
+            cube([_width, _length, height], center = center);
         }
         union() {
             translate([0,0,thickness/-2]) {
-                metricPaper(a = A, height = thickness, center = center);
+                metricPaper(a = a, height = thickness, center = center);
             }
             translate([0,0,height/-2 + thickness/-2]) {
                 perferations(
-                    a = A,
+                    a = a,
                     distance = dd,
                     height = height-thickness,
                     radius = R,
@@ -150,9 +153,9 @@ module metricPerferatedPlate(a, distance, height, radius, rounding_radius, borde
             for(y_side = [-1,1]) {
                 translate(
                     [
-                        ( x_side*(metricPaperShort(a) + border/2 - 2*mD) )/2,
-                        ( y_side*(metricPaperLong(a) + border/2 - 2*mD) )/2,
-                        -1*height + mH/2
+                        x_side*( _width/2  - mR - dM ),
+                        y_side*( _length/2 - mR - dM ),
+                        -height + mH/2
                     ]
                 ) {
                     $fn = fn_constant*mR;

@@ -13,11 +13,11 @@ T = 10;
 aT = 10;
 
 //magnet offset from center (mm)
-dM = 2;
+dM = 5;
 //magnet height (mm)
 mH = 3;
 //magnet radius (mm)
-mR = 2.5;
+mR = 5;
 
 module guide(sphere_radius, hole_radius, center = true) {
     $fn = 4*3.14*sphere_radius;
@@ -32,8 +32,8 @@ module container(a, height, thickness, alignment_thickness, center) {
     difference() {
         cube(
             [
-                metricPaperShort(a = a) + 2*thickness,
-                metricPaperLong( a = a) + 4*thickness + 2*alignment_thickness,
+                metricPaperShort(a = a) + 4*thickness,
+                metricPaperLong( a = a) + 6*thickness + 2*alignment_thickness,
                 height
             ],
             center = center
@@ -41,8 +41,8 @@ module container(a, height, thickness, alignment_thickness, center) {
         translate([0,0,_cavityHeight/-2 + height/2]) {
             cube(
                 [
-                    metricPaperShort(a = a),
-                    metricPaperLong( a = a) + 2*thickness + 2*alignment_thickness,
+                    metricPaperShort(a = a) + 2*thickness,
+                    metricPaperLong( a = a) + 4*thickness + 2*alignment_thickness,
                     _cavityHeight
                 ],
                 center = center
@@ -67,7 +67,7 @@ difference() {
             translate(
                 [
                     side_x*(
-                        metricPaperShort(a = A)/2 + T
+                        metricPaperShort(a = A)/2 + 2*T
                     ),
                     0,
                     H - _sphereRadius
@@ -84,10 +84,10 @@ difference() {
                 translate(
                     [
                         side_x*(
-                            metricPaperShort(a = A)/2 + T - dM - mR
+                            metricPaperShort(a = A)/2 + 2*T - mR/2 - dM
                         ),
                         side_y*(
-                            metricPaperLong(a = A)/2 + 2*T + aT - dM - mR
+                            metricPaperLong(a = A)/2 + 3*T + aT - mR/2 - dM
                         ),
                         mH/-2 + H
                     ]

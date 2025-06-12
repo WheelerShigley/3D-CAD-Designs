@@ -60,6 +60,7 @@ module mainCavity(
     outside_height, inside_height,
     thickness,
     magnet_distance, magnet_height, magnet_radius,
+    lattice_aligner_thickness,
     center = true
 ) {
     _length = metricPaperLong( a = a)+2*thickness;
@@ -70,10 +71,20 @@ module mainCavity(
         //top section
         _topHeight = outside_height-inside_height/2;
         translate([0,0,_topHeight]) {
-            cube([_width, _length, inside_height], center = center);
+            cube(
+                [_width, _length, inside_height],
+                center = center
+            );
             //rounding cavity
             translate([0,0,inside_height/2 - _radius/2]) {
-                cube([_width+2*_radius,_length+2*_radius,_radius], center = center);
+                cube(
+                    [
+                        _width+2*_radius,
+                        _length+2*_radius,
+                        _radius
+                    ],
+                    center = center
+                );
             }
         }
         //bottom section
@@ -86,8 +97,8 @@ module mainCavity(
                 for(side_y = [-1,1]) {
                     translate(
                         [
-                            side_x*( _width/2  - magnet_distance ),
-                            side_y*( _length/2 - magnet_distance ),
+                            side_x*(_width/2  - magnet_distance),
+                            side_y*(_length/2 - magnet_distance),
                             _bottomHeight - magnet_height/2
                         ]
                     ) {
@@ -132,6 +143,7 @@ module mainBody(
                     outside_height = outside_height, inside_height = inside_height,
                     thickness = thickness,
                     magnet_distance = magnet_distance, magnet_height = magnet_height, magnet_radius = magnet_radius,
+                    lattice_aligner_thickness = lattice_aligner_thickness,
                     center = center
                 );
                 //side-alignments
@@ -164,11 +176,11 @@ module mainBody(
                             translate(
                                 [
                                     side_x*(
-                                        metricPaperShort(a = a)/2 + thickness
+                                        metricPaperShort(a = a)/2 + 2*thickness
                                         - magnet_radius - magnet_distance
                                     ),
                                     side_y*(
-                                        metricPaperLong(a = a)/2 + 2*thickness + lattice_aligner_thickness
+                                        metricPaperLong(a = a)/2 + 3*thickness + lattice_aligner_thickness
                                         - magnet_radius - magnet_distance
                                     ),
                                     magnet_height/2
