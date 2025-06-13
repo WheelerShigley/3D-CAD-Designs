@@ -4,7 +4,7 @@ include<common.scadh>;
 //Metric-Paper Number
 A = 7;
 //Paper Thickness (mm)
-thickness = 0.5;
+thickness = 2;
 //distance between points (mm)
 dd = 10;
 //height of board (mm)
@@ -128,40 +128,62 @@ module perferations(a, distance, height, radius, rounding_radius, center = true)
 module metricPerferatedPlate(a, distance, height, radius, rounding_radius, border, center = true) {
     _width = metricPaperShort(a)+2*border;
     _length = metricPaperLong(a)+2*border;
-    difference() {
-        translate([0,0,height/-2]) {
-            cube([_width, _length, height], center = center);
-        }
-        union() {
-            translate([0,0,thickness/-2]) {
-                metricPaper(a = a, height = thickness, center = center);
-            }
-            translate([0,0,height/-2 + thickness/-2]) {
-                perferations(
-                    a = a,
-                    distance = dd,
-                    height = height-thickness,
-                    radius = R,
-                    rounding_radius = rounding_radius,
-                    center = center
-                );
-            }
-        }
-        
-        //magnet holes
-        for(x_side = [-1,1]) {
-            for(y_side = [-1,1]) {
-                translate(
-                    [
-                        x_side*( _width/2  - mR - dM ),
-                        y_side*( _length/2 - mR - dM ),
-                        -height + mH/2
-                    ]
-                ) {
-                    $fn = fn_constant*mR;
-                    cylinder(h = mH, r = mR, center = center);
+    //TODO: reorganize this (below)
+    union() {
+        difference() {
+            union() {
+                translate([0,0,-height/2]) {
+                    cube([_width, _length, height], center = center);
                 }
             }
+            union() {
+                translate([0,0,-thickness/2]) {
+                    cube(
+                        [
+                            metricPaperShort(a = a) + 2*thickness,
+                            metricPaperLong( a = a) + 2*thickness,
+                            thickness
+                        ],
+                        center = true
+                    );
+                }
+                translate([0,0,-(height+thickness)/2]) {
+                    perferations(
+                        a = a,
+                        distance = dd,
+                        height = height-thickness,
+                        radius = R,
+                        rounding_radius = rounding_radius,
+                        center = center
+                    );
+                }
+            }
+            
+            //magnet holes
+            for(x_side = [-1,1]) {
+                for(y_side = [-1,1]) {
+                    translate(
+                        [
+                            x_side*( _width/2  - mR - dM ),
+                            y_side*( _length/2 - mR - dM ),
+                            -height + mH/2
+                        ]
+                    ) {
+                        $fn = fn_constant*mR;
+                        cylinder(h = mH, r = mR, center = center);
+                    }
+                }
+            }
+        }
+        //rounded face
+        translate([0,0,-thickness/2]) {
+            roundedEdgeFace(
+                [
+                    metricPaperShort(a = a),
+                    metricPaperLong( a = a),
+                    thickness
+                ]
+            );
         }
     }
 }
