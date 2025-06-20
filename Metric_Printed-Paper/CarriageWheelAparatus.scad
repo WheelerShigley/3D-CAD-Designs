@@ -7,6 +7,7 @@ T = 5;
 //Wheel-Axel Radius (mm)
 wR = 0.5;
 
+//TODO: redo
 module carriageAparatus(center = false) {
     translate([0,0,center ? 0: T/2]) {
         difference() {
