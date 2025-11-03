@@ -1,15 +1,15 @@
 include<base.scad>;
 
 SIDES = 6;
-LENGTH = 124+20;
-RADIUS = 20;
-HEIGHT = 80;
+LENGTH = 24.8+2;
+RADIUS = 2;
+HEIGHT = 4;
 
 //Top
 /*
 base_female(
     length = LENGTH,
-    height = 20,
+    height = HEIGHT/4,
     radius = RADIUS,
     sides = SIDES
 );
@@ -19,16 +19,16 @@ base_female(
 /*
 base_male(
     length = LENGTH,
-    height = 20,
+    height = HEIGHT/4,
     radius = RADIUS,
     sides = SIDES
 );
 */
 
 //Middle
-/*
+
 middle();
-*/
+
 
 module prism(sides, height, radius) {
     rotate([0,0,180/sides]) {
@@ -40,32 +40,35 @@ module prism(sides, height, radius) {
     }
 }
 
-
 module wall(length, height, width, sides) {
     difference() {
         prism(
             sides = sides,
             height = height,
-            radius = length/2 + width
+            radius = length/4 + width
         );
         prism(
             sides = sides,
             height = height,
-            radius = length/2
+            radius = length/4
         );
     };
 }
 
 module middle() {
-    _base_height = 20;
+    _base_height = HEIGHT/4;
     difference() {
         union() {
-            base_female(
-                length = LENGTH,
-                height = _base_height,
-                radius = RADIUS,
-                sides = SIDES
-            );
+            rotate([180,0,0]) {
+                translate([0,0,-_base_height]) {
+                    base_female(
+                        length = LENGTH,
+                        height = _base_height,
+                        radius = RADIUS,
+                        sides = SIDES
+                    );
+                }
+            }
             translate([0,0,HEIGHT+_base_height]) {
                 base_male(
                     length = LENGTH,
@@ -78,7 +81,7 @@ module middle() {
                 wall(
                     length = LENGTH,
                     height = HEIGHT,
-                    width = 8,
+                    width = LENGTH*sqrt(3)/15,
                     sides = SIDES
                 );
             }
@@ -86,7 +89,7 @@ module middle() {
         prism(
             sides = SIDES,
             height = HEIGHT + 2*20,
-            radius = LENGTH/2
+            radius = LENGTH/4
         );
     }
 }

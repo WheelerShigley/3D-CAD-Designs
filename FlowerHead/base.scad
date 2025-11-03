@@ -1,9 +1,9 @@
 include<trig.scad>;
 
 SIDES = 6;
-LENGTH = 124+20;
-RADIUS = 20;
-HEIGHT = 20;
+LENGTH = 24.8+4;
+RADIUS = 2;
+HEIGHT = 8;
 
 module base(length, height, radius, sides) {
 	hull() {
@@ -11,9 +11,12 @@ module base(length, height, radius, sides) {
 		for(n = [0:sides]) {
 			N = n/sides;
 			translate(
-				[x(length/2,N),y(length/2,N),0]
+				[x(length/2-radius,N),y(length/2-radius,N),height/2]
 			) {
-				cylinder(r = radius, h = height);
+                union() {
+                    sphere(r = height/2);
+                    cylinder(r = height/2, h = height/2);
+                }
 			}
 		}
 	}
@@ -24,7 +27,7 @@ module balls(length, radius, sides) {
     $fn = 32;
     for(n = [0:sides]) {
         N = n/sides;
-        distance = _radius + length/2;
+        distance = length * 3/4;
         translate(
             [x(distance,N),y(distance,N),0]
         ) {
@@ -38,13 +41,21 @@ module tubes(length, radius, sides, height) {
     $fn = 32;
     for(n = [0:sides]) {
         N = n/sides;
-        distance = _radius + length/2;
+        distance = length * 3/4;
         translate(
             [x(distance,N),y(distance,N),0]
         ) {
             cylinder(r = _radius, h = height);
         }
     }
+}
+
+module torus(inner_radius, outer_radius) {
+    _radius = outer_radius - inner_radius;
+    $fn = 16;
+    rotate_extrude(convexity = 8)
+        translate([outer_radius, 0, 0])
+            circle(r = _radius);
 }
 
 module base_male(length, height, radius, sides) {
@@ -57,7 +68,7 @@ module base_male(length, height, radius, sides) {
         );
         translate([0,0,height]) {
             balls(
-                length = length,
+                length = length/2,
                 radius = radius/2,
                 sides = sides
             );
@@ -73,13 +84,11 @@ module base_female(length, height, radius, sides) {
             radius = radius,
             sides = sides
         );
-        translate([0,0,0]) {
-            tubes(
-                length = length,
-                radius = radius/2,
-                height = height,
-                sides = sides
-            );
-        }
+        tubes(
+            length = length/2,
+            radius = radius/2,
+            height = height,
+            sides = sides
+        );
     }
 }
