@@ -1,7 +1,7 @@
 include<base.scad>;
 
 SIDES = 6;
-LENGTH = 24.8+2;
+LENGTH = 24.8+4;
 RADIUS = 2;
 HEIGHT = 4;
 
@@ -65,7 +65,8 @@ module middle() {
                         length = LENGTH,
                         height = _base_height,
                         radius = RADIUS,
-                        sides = SIDES
+                        sides = SIDES,
+                        reliefs = false
                     );
                 }
             }
@@ -74,7 +75,8 @@ module middle() {
                     length = LENGTH,
                     height = _base_height,
                     radius = RADIUS,
-                    sides = SIDES
+                    sides = SIDES,
+                    reliefs = false
                 );
             }
             translate([0,0,_base_height]) {
