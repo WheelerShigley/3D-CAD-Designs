@@ -5,14 +5,14 @@ LENGTH = 24.8+4;
 RADIUS = 2;
 HEIGHT = 4/4;
 
-/*
+
 base_male(
     sides = SIDES,
     length = LENGTH,
     radius = RADIUS,
     height = HEIGHT
 );
-*/
+
 
 module base(length, height, radius, sides) {
 	hull() {
