@@ -67,53 +67,7 @@ module torus(inner_radius, outer_radius) {
             circle(r = _radius);
 }
 
-module relief(height, length, sides) {
-    _radius = height/2;
-    difference() {
-        $fn = sides;
-        cylinder(
-            r = length/2 + 2*height,
-            h = height/2
-        );
-        union() {
-            $fn = 64;
-            for(n = [0:sides]) {
-                N = (n+0.5)/sides;
-                _length = length/2;
-                translate([x(_length,N),y(_length,N),height/2]) {
-                    rotate([90,0,360*N]) {
-                        cylinder(
-                            h = ( sqrt(3)/3 ) * length,
-                            r = _radius,
-                            center = true
-                        );
-                    }
-                }
-            }
-            for(n = [0:sides/2]) {
-                N = n/sides + 30;
-                translate([0,0,height/2]) {
-                    rotate([90,0,360*N]) {
-                        union() {
-                            cylinder(
-                                h = length,
-                                r = _radius,
-                                center = true
-                            );
-                            cylinder(
-                                h = length,
-                                r = _radius,
-                                center = true
-                            );
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-module base_male(length, height, radius, sides, reliefs = true) {
+module base_male(length, height, radius, sides) {
     difference() {
         union() {
             base(
@@ -130,17 +84,10 @@ module base_male(length, height, radius, sides, reliefs = true) {
                 );
             }
         }
-        if(reliefs) {
-            relief(
-                length = length/2,
-                height = height/2,
-                sides = sides
-            );
-        }
     }
 }
 
-module base_female(length, height, radius, sides, reliefs = true) {
+module base_female(length, height, radius, sides) {
     difference() {
         base(
             length = length,
@@ -155,11 +102,13 @@ module base_female(length, height, radius, sides, reliefs = true) {
                 height = height,
                 sides = sides
             );
-            if(reliefs) {
-                relief(
-                    length = length/2,
-                    height = height/2,
-                    sides = sides
+            translate([0,0,height/2]) {
+                _radius = length/4.6;
+                $fn = 4*3.14*_radius;
+                cylinder(
+                    h = height,
+                    r = _radius,
+                    center = true
                 );
             }
         }
